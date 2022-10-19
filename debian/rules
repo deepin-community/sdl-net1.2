@@ -1,0 +1,24 @@
+#!/usr/bin/make -f
+
+#export DH_VERBOSE=1
+
+
+export DEB_CFLAGS_MAINT_APPEND  := -pipe -Wall
+export DEB_LDFLAGS_MAINT_APPEND := -Wl,--no-undefined -Wl,-Bsymbolic -Wl,--as-needed
+
+
+# export variables for autoreconf
+export AUTOMAKE := automake --foreign
+
+
+# according to help: speeds up one-time build
+confflags = --disable-dependency-tracking
+# GUI needed only for examples, don't even try to support it
+confflags += --disable-gui
+
+
+%:
+	dh $@ --dbgsym-migration='libsdl-net1.2-dbg (<< 1.2.8-5~)'
+
+override_dh_auto_configure:
+	dh_auto_configure -- $(confflags)
